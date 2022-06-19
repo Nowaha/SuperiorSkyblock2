@@ -95,11 +95,6 @@ public final class PlayersListener implements Listener {
                     "&8[&fSuperiorSeries&8] &7This server is using SuperiorSkyblock2 v" +
                             plugin.getDescription().getVersion() + buildName, true), 5L);
         }
-        if (e.getPlayer().isOp() && plugin.getUpdater().isOutdated()) {
-            Bukkit.getScheduler().runTaskLater(plugin, () ->
-                    e.getPlayer().sendMessage(ChatColor.BLUE + "" + ChatColor.BOLD + "SuperiorSkyblock2" + ChatColor.GRAY +
-                            " A new version is available (v" + plugin.getUpdater().getLatestVersion() + ")!"), 20L);
-        }
     }
 
     @EventHandler

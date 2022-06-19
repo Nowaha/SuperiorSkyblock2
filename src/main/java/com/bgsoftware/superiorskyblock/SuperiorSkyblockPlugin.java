@@ -108,7 +108,6 @@ public final class SuperiorSkyblockPlugin extends JavaPlugin implements Superior
             Pattern.compile("Plugin SuperiorSkyblock2 v(.*) has failed to register events for (.*) because (.*) does not exist\\.");
 
     private static SuperiorSkyblockPlugin plugin;
-    private final Updater updater = new Updater(this, "superiorskyblock2");
 
     private final DataHandler dataHandler = new DataHandler(this);
     private final FactoriesHandler factoriesHandler = new FactoriesHandler();
@@ -290,13 +289,6 @@ public final class SuperiorSkyblockPlugin extends JavaPlugin implements Superior
 
             modulesHandler.enableModules(ModuleLoadTime.AFTER_HANDLERS_LOADING);
 
-            if (updater.isOutdated()) {
-                log("");
-                log("A new version is available (v" + updater.getLatestVersion() + ")!");
-                log("Version's description: \"" + updater.getVersionDescription() + "\"");
-                log("");
-            }
-
             ChunksProvider.start();
 
             Executor.sync(() -> {
@@ -407,10 +399,6 @@ public final class SuperiorSkyblockPlugin extends JavaPlugin implements Superior
         getServer().getPluginManager().registerEvents(listener, this);
         if (!listenerRegisterFailure.isEmpty())
             throw new RuntimeException(listenerRegisterFailure);
-    }
-
-    public Updater getUpdater() {
-        return updater;
     }
 
     private boolean loadNMSAdapter() {
