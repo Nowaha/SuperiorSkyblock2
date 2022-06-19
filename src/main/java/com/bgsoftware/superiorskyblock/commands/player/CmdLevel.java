@@ -8,31 +8,35 @@ import com.bgsoftware.superiorskyblock.commands.arguments.CommandArguments;
 import com.bgsoftware.superiorskyblock.commands.arguments.IslandArgument;
 import com.bgsoftware.superiorskyblock.lang.Message;
 import org.bukkit.command.CommandSender;
+import xyz.nowaha.islandlevels.IslandLevelData;
+import xyz.nowaha.islandlevels.configurables.Settings;
+import xyz.nowaha.islandlevels.data.database.Database;
+import xyz.nowaha.islandlevels.guis.LevelsGui;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public final class CmdRecalc implements ISuperiorCommand {
+public final class CmdLevel implements ISuperiorCommand {
 
     @Override
     public List<String> getAliases() {
-        return Arrays.asList("recalc", "recalculate", "level");
+        return Arrays.asList("level", "levels");
     }
 
     @Override
     public String getPermission() {
-        return "superior.island.recalc";
+        return "superior.island.level";
     }
 
     @Override
     public String getUsage(java.util.Locale locale) {
-        return "recalc";
+        return "level";
     }
 
     @Override
     public String getDescription(java.util.Locale locale) {
-        return Message.COMMAND_DESCRIPTION_RECALC.getMessage(locale);
+        return "View your island's level track.";
     }
 
     @Override
@@ -60,14 +64,8 @@ public final class CmdRecalc implements ISuperiorCommand {
             return;
 
         SuperiorPlayer superiorPlayer = arguments.getSuperiorPlayer();
-
-        if (island.isBeingRecalculated()) {
-            Message.RECALC_ALREADY_RUNNING.send(superiorPlayer);
-            return;
-        }
-
-        Message.RECALC_PROCCESS_REQUEST.send(superiorPlayer);
-        island.calcIslandWorth(superiorPlayer);
+        IslandLevelData levelData = Database.getInstance().getLevelsTable().getIslandLevelData(island.getUniqueId());
+        superiorPlayer.asPlayer().openInventory(LevelsGui.generateGui(superiorPlayer.asPlayer(), Math.max(1, levelData.getIslandLevel() - Settings.LEVELS_GUI_CURRENT_OFFSET), levelData.getIslandLevel()));
     }
 
     @Override

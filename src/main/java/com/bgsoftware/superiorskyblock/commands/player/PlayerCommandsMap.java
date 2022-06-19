@@ -41,7 +41,7 @@ public final class PlayerCommandsMap extends CommandsMap {
         registerCommand(new CmdPromote(), false);
         registerCommand(new CmdRate(), false);
         registerCommand(new CmdRatings(), false);
-        registerCommand(new CmdRecalc(), false);
+        registerCommand(new CmdLevel(), false);
         registerCommand(new CmdSetDiscord(), false);
         registerCommand(new CmdSetPaypal(), false);
         registerCommand(new CmdSetRole(), false);

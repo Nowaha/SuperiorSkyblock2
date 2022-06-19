@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
-    id 'maven-publish'
 }
 
 group 'SuperiorSkyblock'
@@ -67,11 +66,14 @@ dependencies {
     // Spigot jars
     compileOnly "org.spigotmc:v1_8_R3-Taco:latest"
     compileOnly 'org.spigotmc:v1_16_R3-Tuinity:latest'
+
+    // Local IslandLevels file.
+    compileOnly files("C:\\Users\\Noah\\Documents\\IdeaProjects\\IslandLevels\\build\\libs\\IslandLevels-1.0-SNAPSHOT.jar")
 }
 
 jar {
     from {
-        for (File file : new File("archive").listFiles()) {
+        for (File file : new File("./archive/").listFiles()) {
             zipTree(file)
         }
     }
@@ -121,11 +123,6 @@ clean {
 }
 
 build {
-    dependsOn shadowJar
     dependsOn copyAPI
     dependsOn clean
-}
-
-publish.shouldRunAfter shadowJar
-shadowJar.shouldRunAfter build
-build.shouldRunAfter subprojects.build
+}.mustRunAfter subprojects.shadowJar

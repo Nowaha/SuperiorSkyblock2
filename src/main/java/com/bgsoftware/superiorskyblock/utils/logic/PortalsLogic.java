@@ -83,28 +83,8 @@ public final class PortalsLogic {
 
             Location schematicPlacementLocation = island.getCenter(destinationEnvironment).subtract(0, 1, 0);
 
-            BigDecimal originalWorth = island.getRawWorth();
-            BigDecimal originalLevel = island.getRawLevel();
-
             schematic.pasteSchematic(island, schematicPlacementLocation, () -> {
                 island.setSchematicGenerate(destinationEnvironment);
-
-                if (shouldOffsetSchematic(destinationEnvironment)) {
-                    {
-                        BigDecimal schematicWorth = island.getRawWorth().subtract(originalWorth);
-                        EventResult<BigDecimal> eventResult = plugin.getEventsBus().callIslandChangeWorthBonusEvent(null, island,
-                                IslandChangeWorthBonusEvent.Reason.SCHEMATIC, island.getBonusWorth().subtract(schematicWorth));
-                        if (!eventResult.isCancelled())
-                            island.setBonusWorth(eventResult.getResult());
-                    }
-                    {
-                        BigDecimal schematicLevel = island.getRawLevel().subtract(originalLevel);
-                        EventResult<BigDecimal> eventResult = plugin.getEventsBus().callIslandChangeLevelBonusEvent(null, island,
-                                IslandChangeLevelBonusEvent.Reason.SCHEMATIC, island.getBonusLevel().subtract(schematicLevel));
-                        if (!eventResult.isCancelled())
-                            island.setBonusLevel(island.getBonusLevel().subtract(schematicLevel));
-                    }
-                }
 
                 Location destinationLocation = island.getIslandHome(destinationEnvironment);
 

@@ -34,6 +34,8 @@ public final class DefaultIslandCreationAlgorithm implements IslandCreationAlgor
                                                                 String islandName, Schematic schematic) {
         CompletableFuture<IslandCreationResult> completableFuture = new CompletableFuture<>();
 
+        System.out.println("_a");
+
         Location islandLocation = plugin.getProviders().getWorldsProvider().getNextLocation(
                 lastIsland.parse().clone(),
                 plugin.getSettings().getIslandHeight(),
@@ -44,23 +46,30 @@ public final class DefaultIslandCreationAlgorithm implements IslandCreationAlgor
 
         PluginDebugger.debug("Action: Calculate Next Island, Location: " + Formatters.LOCATION_FORMATTER.format(islandLocation));
 
+        System.out.println("_b");
+
         Island island = plugin.getFactory().createIsland(owner, islandUUID, islandLocation.add(0.5, 0, 0.5),
                 islandName, schematic.getName());
 
         EventResult<Boolean> event = plugin.getEventsBus().callIslandCreateEvent(owner, island, schematic.getName());
 
+        System.out.println("_c");
         if (!event.isCancelled()) {
+            System.out.println("_d");
             schematic.pasteSchematic(island, islandLocation.getBlock().getRelative(BlockFace.DOWN).getLocation(), () -> {
                 plugin.getProviders().getWorldsProvider().finishIslandCreation(islandLocation,
                         owner.getUniqueId(), islandUUID);
+                System.out.println("_e");
                 completableFuture.complete(new IslandCreationResult(island, islandLocation, event.getResult()));
             }, error -> {
+                System.out.println("_f");
                 plugin.getProviders().getWorldsProvider().finishIslandCreation(islandLocation,
                         owner.getUniqueId(), islandUUID);
                 completableFuture.completeExceptionally(error);
             });
         }
 
+        System.out.println("_g");
         return completableFuture;
     }
 

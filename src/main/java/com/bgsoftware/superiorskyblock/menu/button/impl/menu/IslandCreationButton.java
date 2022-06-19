@@ -154,16 +154,6 @@ public final class IslandCreationButton extends SuperiorMenuButton<MenuIslandCre
             return this;
         }
 
-        public Builder setBonusWorth(BigDecimal bonusWorth) {
-            this.bonusWorth = bonusWorth;
-            return this;
-        }
-
-        public Builder setBonusLevel(BigDecimal bonusLevel) {
-            this.bonusLevel = bonusLevel;
-            return this;
-        }
-
         public Builder setOffset(boolean isOffset) {
             this.isOffset = isOffset;
             return this;

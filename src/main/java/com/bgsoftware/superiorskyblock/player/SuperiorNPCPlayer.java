@@ -178,6 +178,16 @@ public final class SuperiorNPCPlayer implements SuperiorPlayer {
     }
 
     @Override
+    public void setIslandJoinTime(long time) {
+        // Do nothing
+    }
+
+    @Override
+    public long getIslandJoinTime() {
+        return 0;
+    }
+
+    @Override
     public boolean isInsideIsland() {
         return false;
     }

@@ -102,6 +102,7 @@ public final class GridHandler extends AbstractHandler implements GridManager {
             throw new RuntimeException("GridManager was not initialized correctly. Contact Ome_R regarding this!");
 
         initializeDatabaseBridge();
+        System.out.println("load algo");
         this.islandCreationAlgorithm = DefaultIslandCreationAlgorithm.getInstance();
 
         this.lastIsland = new SBlockPosition(plugin.getSettings().getWorlds().getDefaultWorldName(), 0, 100, 0);
@@ -135,10 +136,9 @@ public final class GridHandler extends AbstractHandler implements GridManager {
     public void createIsland(SuperiorPlayer superiorPlayer, String schemName, BigDecimal bonus, Biome biome, String islandName, boolean offset) {
         Preconditions.checkNotNull(superiorPlayer, "superiorPlayer parameter cannot be null.");
         Preconditions.checkNotNull(schemName, "schemName parameter cannot be null.");
-        Preconditions.checkNotNull(bonus, "bonus parameter cannot be null.");
         Preconditions.checkNotNull(biome, "biome parameter cannot be null.");
         Preconditions.checkNotNull(islandName, "islandName parameter cannot be null.");
-        createIsland(superiorPlayer, schemName, bonus, BigDecimal.ZERO, biome, islandName, false);
+        createIsland(superiorPlayer, schemName, BigDecimal.ZERO, BigDecimal.ZERO, biome, islandName, false);
     }
 
     @Override
@@ -146,18 +146,21 @@ public final class GridHandler extends AbstractHandler implements GridManager {
                              BigDecimal bonusLevel, Biome biome, String islandName, boolean offset) {
         Preconditions.checkNotNull(superiorPlayer, "superiorPlayer parameter cannot be null.");
         Preconditions.checkNotNull(schemName, "schemName parameter cannot be null.");
-        Preconditions.checkNotNull(bonusWorth, "bonusWorth parameter cannot be null.");
-        Preconditions.checkNotNull(bonusLevel, "bonusLevel parameter cannot be null.");
         Preconditions.checkNotNull(biome, "biome parameter cannot be null.");
         Preconditions.checkNotNull(islandName, "islandName parameter cannot be null.");
 
+        System.out.println("a");
+
         if (!Bukkit.isPrimaryThread()) {
-            Executor.sync(() -> createIsland(superiorPlayer, schemName, bonusWorth, bonusLevel, biome, islandName, offset));
+            System.out.println("b");
+            Executor.sync(() -> createIsland(superiorPlayer, schemName, BigDecimal.ZERO, BigDecimal.ZERO, biome, islandName, offset));
             return;
         }
 
+        System.out.println("c");
+
         PluginDebugger.debug("Action: Create Island, Target: " + superiorPlayer.getName() + ", Schematic: " +
-                schemName + ", Bonus Worth: " + bonusWorth + ", Bonus Level: " + bonusLevel + ", Biome: " + biome +
+                schemName + ", Biome: " + biome +
                 ", Name: " + islandName + ", Offset: " + offset);
 
         Schematic schematic = plugin.getSchematics().getSchematic(schemName);
@@ -165,21 +168,28 @@ public final class GridHandler extends AbstractHandler implements GridManager {
         if (schematic == null)
             throw new IllegalArgumentException("Cannot create an island with an invalid schematic.");
 
+        System.out.println("d");
+
         // Removing any active previews for the player.
         boolean updateGamemode = this.islandPreviews.endIslandPreview(superiorPlayer) != null;
 
         if (!plugin.getEventsBus().callPreIslandCreateEvent(superiorPlayer, islandName))
             return;
 
+        System.out.println("e");
         UUID islandUUID = generateIslandUUID();
 
         long startTime = System.currentTimeMillis();
 
         pendingCreationTasks.add(superiorPlayer.getUniqueId());
+        System.out.println("f");
 
         this.islandCreationAlgorithm.createIsland(islandUUID, superiorPlayer, this.lastIsland, islandName, schematic)
                 .whenComplete((islandCreationResult, error) -> {
+                    System.out.println("g");
                     if (error == null) {
+                        System.out.println("h");
+
                         Island island = islandCreationResult.getIsland();
                         Location islandLocation = islandCreationResult.getIslandLocation();
                         boolean teleportPlayer = islandCreationResult.shouldTeleportPlayer();
@@ -191,22 +201,26 @@ public final class GridHandler extends AbstractHandler implements GridManager {
 
                         pendingCreationTasks.remove(superiorPlayer.getUniqueId());
 
-                        island.setBonusWorth(offset ? island.getRawWorth().negate() : bonusWorth);
-                        island.setBonusLevel(offset ? island.getRawLevel().negate() : bonusLevel);
                         island.setBiome(biome);
                         island.setIslandHome(schematic.adjustRotation(islandLocation));
 
                         IslandsDatabaseBridge.insertIsland(island);
 
                         Executor.sync(() -> superiorPlayer.runIfOnline(player -> {
+                            System.out.println("ddwadw");
                             Message.CREATE_ISLAND.send(superiorPlayer, Formatters.LOCATION_FORMATTER.format(
                                     islandLocation), System.currentTimeMillis() - startTime);
                             if (teleportPlayer) {
+                                System.out.println("ddwadwd1w");
                                 if (updateGamemode)
                                     player.setGameMode(GameMode.SURVIVAL);
+                                System.out.println("ddwad2121312w");
                                 superiorPlayer.teleport(island, result -> {
+                                    System.out.println("ddwadw11111");
                                     if (result) {
+                                        System.out.println("ddwadadawdwadw");
                                         Executor.sync(() -> IslandUtils.resetChunksExcludedFromList(island, loadedChunks), 10L);
+                                        System.out.println("zxzxxz");
                                         if (plugin.getSettings().getWorlds().getDefaultWorld() == World.Environment.THE_END) {
                                             plugin.getNMSDragonFight().awardTheEndAchievement(player);
                                             plugin.getServices().getDragonBattleService().resetEnderDragonBattle(island);
@@ -524,18 +538,6 @@ public final class GridHandler extends AbstractHandler implements GridManager {
     @Override
     public void calcAllIslands(Runnable callback) {
         PluginDebugger.debug("Action: Calculate All Islands");
-        List<Island> islands = new ArrayList<>();
-
-        {
-            for (Island island : this.islandsContainer.getIslandsUnsorted()) {
-                if (!island.isBeingRecalculated())
-                    islands.add(island);
-            }
-        }
-
-        for (int i = 0; i < islands.size(); i++) {
-            islands.get(i).calcIslandWorth(null, i + 1 < islands.size() ? null : callback);
-        }
     }
 
     @Override
@@ -585,8 +587,6 @@ public final class GridHandler extends AbstractHandler implements GridManager {
         if (currentTime - lastTimeWorthUpdate > 60000) {
             lastTimeWorthUpdate = currentTime;
             totalWorth = BigDecimal.ZERO;
-            for (Island island : getIslands())
-                totalWorth = totalWorth.add(island.getWorth());
         }
 
         return totalWorth;

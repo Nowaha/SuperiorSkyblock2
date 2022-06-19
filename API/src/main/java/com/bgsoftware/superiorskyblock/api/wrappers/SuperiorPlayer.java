@@ -210,6 +210,10 @@ public interface SuperiorPlayer extends IMissionsHolder, IPersistentDataHolder, 
      */
     void teleport(Island island, World.Environment environment, @Nullable Consumer<Boolean> teleportResult);
 
+    void setIslandJoinTime(long time);
+
+    long getIslandJoinTime();
+
     /**
      * Check whether or not the player is inside their island.
      * When the player is offline or he doesn't have an island, false will be returned.

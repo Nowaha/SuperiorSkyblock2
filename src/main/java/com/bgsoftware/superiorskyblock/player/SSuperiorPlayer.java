@@ -85,6 +85,8 @@ public final class SSuperiorPlayer implements SuperiorPlayer {
 
     private BukkitTask teleportTask = null;
 
+    private long islandJoinTime = 0;
+
     public SSuperiorPlayer(UUID player) {
         this(player, Bukkit.getOfflinePlayer(player), SPlayerRole.guestRole(), plugin.getSettings().getDisbandCount(),
                 PlayerLocales.getDefaultLocale());
@@ -370,6 +372,16 @@ public final class SSuperiorPlayer implements SuperiorPlayer {
         } else if (teleportResult != null) {
             teleportResult.accept(false);
         }
+    }
+
+    @Override
+    public void setIslandJoinTime(long time) {
+        this.islandJoinTime = time;
+    }
+
+    @Override
+    public long getIslandJoinTime() {
+        return this.islandJoinTime;
     }
 
     @Override

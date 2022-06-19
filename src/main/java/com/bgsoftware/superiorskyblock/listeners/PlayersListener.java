@@ -382,12 +382,8 @@ public final class PlayersListener implements Listener {
                     .replace("{island-level}", String.valueOf(island == null ? 0 : island.getIslandLevel()))
                     .replace("{island-level-format}", String.valueOf(island == null ? 0 :
                             Formatters.FANCY_NUMBER_FORMATTER.format(island.getIslandLevel(), superiorPlayer.getUserLocale())))
-                    .replace("{island-worth}", String.valueOf(island == null ? 0 : island.getWorth()))
-                    .replace("{island-worth-format}", String.valueOf(island == null ? 0 :
-                            Formatters.FANCY_NUMBER_FORMATTER.format(island.getWorth(), superiorPlayer.getUserLocale())))
                     .replace("{island-name}", islandNameFormat == null ? "" : islandNameFormat)
                     .replace("{island-role}", superiorPlayer.getPlayerRole().getDisplayName())
-                    .replace("{island-position-worth}", island == null ? "" : (plugin.getGrid().getIslandPosition(island, SortingTypes.BY_WORTH) + 1) + "")
                     .replace("{island-position-level}", island == null ? "" : (plugin.getGrid().getIslandPosition(island, SortingTypes.BY_LEVEL) + 1) + "")
                     .replace("{island-position-rating}", island == null ? "" : (plugin.getGrid().getIslandPosition(island, SortingTypes.BY_RATING) + 1) + "")
                     .replace("{island-position-players}", island == null ? "" : (plugin.getGrid().getIslandPosition(island, SortingTypes.BY_PLAYERS) + 1) + "")

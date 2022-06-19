@@ -13,7 +13,6 @@ public final class AdminCommandsMap extends CommandsMap {
     public void loadDefaultCommands() {
         registerCommand(new CmdAdminAdd(), false);
         registerCommand(new CmdAdminAddBlockLimit(), false);
-        registerCommand(new CmdAdminAddBonus(), false);
         registerCommand(new CmdAdminAddCoopLimit(), false);
         registerCommand(new CmdAdminAddDisbands(), false);
         registerCommand(new CmdAdminAddEntityLimit(), false);
@@ -40,7 +39,6 @@ public final class AdminCommandsMap extends CommandsMap {
         registerCommand(new CmdAdminOpenMenu(), false);
         registerCommand(new CmdAdminPromote(), false);
         registerCommand(new CmdAdminPurge(), false);
-        registerCommand(new CmdAdminRecalc(), false);
         registerCommand(new CmdAdminReload(), false);
         registerCommand(new CmdAdminRemoveBlockLimit(), false);
         registerCommand(new CmdAdminRemoveRatings(), false);
@@ -50,7 +48,6 @@ public final class AdminCommandsMap extends CommandsMap {
         registerCommand(new CmdAdminSetBiome(), false);
         registerCommand(new CmdAdminSetBlockAmount(), false);
         registerCommand(new CmdAdminSetBlockLimit(), false);
-        registerCommand(new CmdAdminSetBonus(), false);
         registerCommand(new CmdAdminSetChestRow(), false);
         registerCommand(new CmdAdminSetCoopLimit(), false);
         registerCommand(new CmdAdminSetDisbands(), false);

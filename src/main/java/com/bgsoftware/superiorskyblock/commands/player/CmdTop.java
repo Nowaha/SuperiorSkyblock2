@@ -6,6 +6,7 @@ import com.bgsoftware.superiorskyblock.commands.ISuperiorCommand;
 import com.bgsoftware.superiorskyblock.lang.Message;
 import com.bgsoftware.superiorskyblock.utils.islands.SortingTypes;
 import org.bukkit.command.CommandSender;
+import xyz.nowaha.islandlevels.guis.IslandTopGUI;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +51,7 @@ public final class CmdTop implements ISuperiorCommand {
     @Override
     public void execute(SuperiorSkyblockPlugin plugin, CommandSender sender, String[] args) {
         SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(sender);
-        plugin.getMenus().openTopIslands(superiorPlayer, null, SortingTypes.getDefaultSorting());
+        superiorPlayer.asPlayer().openInventory(IslandTopGUI.generateGui(superiorPlayer.asPlayer(), 1));
     }
 
     @Override

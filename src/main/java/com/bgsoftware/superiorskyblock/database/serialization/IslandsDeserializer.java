@@ -89,6 +89,7 @@ public final class IslandsDeserializer {
 
             SuperiorPlayer superiorPlayer = plugin.getPlayers().getSuperiorPlayer(playerUUID.get());
             superiorPlayer.setPlayerRole(playerRole);
+            superiorPlayer.setIslandJoinTime(members.getLong("join_time").orElse(System.currentTimeMillis()));
 
             cachedIslandInfo.members.add(superiorPlayer);
         });

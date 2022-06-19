@@ -50,6 +50,8 @@ public final class IslandsDatabaseBridge {
                 new Pair<>("role", superiorPlayer.getPlayerRole().getId()),
                 new Pair<>("join_time", addTime)
         );
+
+        superiorPlayer.setIslandJoinTime(addTime);
     }
 
     public static void removeMember(Island island, SuperiorPlayer superiorPlayer) {
@@ -211,15 +213,11 @@ public final class IslandsDatabaseBridge {
     }
 
     public static void saveBonusWorth(Island island) {
-        island.getDatabaseBridge().updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("worth_bonus", island.getBonusWorth() + ""));
+
     }
 
     public static void saveBonusLevel(Island island) {
-        island.getDatabaseBridge().updateObject("islands",
-                createFilter("uuid", island),
-                new Pair<>("levels_bonus", island.getBonusLevel() + ""));
+
     }
 
     public static void saveUpgrade(Island island, Upgrade upgrade, int level) {
@@ -571,8 +569,8 @@ public final class IslandsDatabaseBridge {
                 new Pair<>("island_type", island.getSchematicName()),
                 new Pair<>("discord", island.getDiscord()),
                 new Pair<>("paypal", island.getPaypal()),
-                new Pair<>("worth_bonus", island.getBonusWorth() + ""),
-                new Pair<>("levels_bonus", island.getBonusLevel() + ""),
+                new Pair<>("worth_bonus", 0 + ""),
+                new Pair<>("levels_bonus", 0 + ""),
                 new Pair<>("locked", island.isLocked()),
                 new Pair<>("ignored", island.isIgnored()),
                 new Pair<>("name", island.getName()),
